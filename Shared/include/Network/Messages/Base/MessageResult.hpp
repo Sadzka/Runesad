@@ -9,6 +9,7 @@ enum class MessageResult : unsigned {
     AlreadyLogged,
     InvalidUsername,
     InvalidPassword,
+    LobbyNotExist,
     UnknownStatus
 };
 

@@ -25,6 +25,10 @@ void Client::listenThreadFunction() {
                 }
                 break;
             }
+            default:
+            {
+                break;
+            }
         }
     }
 }

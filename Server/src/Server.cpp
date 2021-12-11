@@ -56,16 +56,16 @@ void Server::authenticateThreadFunction() {
 
 void Server::listenThreadFunction()
 {
+    sf::Clock timeoutClock;
     while (running)
     {
+        mutex.lock();
         for (auto &pair : clients) {
-
             sf::Packet packet;
             std::shared_ptr<Client> &client = pair.second;
             if (client->socket.receive(packet) != ssf::Socket::Done) {
                 continue;
             }
-            SysLog::Print(SysLog::Severity::Info, "Handle %s", pair.first.c_str());
 
             MessageId id = Msg::GetId(packet);
 
@@ -93,12 +93,12 @@ void Server::listenThreadFunction()
                               msg.username.c_str());
 
                 Msg::AuthenticateResp resp{};
-                if (clients.find(client->username) != clients.end()) // userAlreadyLogged
+                if (client->authenticated) // userAlreadyLogged
                 {
                     SysLog::Print(SysLog::Severity::Info, "[Authenticate Thread] Result (%s): Already Logged",
                                   msg.username.c_str());
                     resp.result = MessageResult::AlreadyLogged;
-                    client->socket.send(resp);
+                    client->send(resp);
                     continue;
                 }
 
@@ -107,6 +107,7 @@ void Server::listenThreadFunction()
                     SysLog::Print(SysLog::Severity::Info, "[Authenticate Thread] Result (%s): Ok",
                                   msg.username.c_str());
                     resp.result = MessageResult::Ok;
+                    client->authenticated = true;
                 }
                 else
                 {
@@ -115,7 +116,7 @@ void Server::listenThreadFunction()
                     resp.result = MessageResult::InvalidUsernameOrPassword;
                 }
 
-                client->socket.send(resp);
+                client->send(resp);
                 continue;
             }
             else if (id == MsgType::Hearthbeat)
@@ -123,7 +124,19 @@ void Server::listenThreadFunction()
                 client->hearthbeat = clock.getElapsedTime().asMicroseconds();
                 continue;
             }
-            Messenger::handleMessage(this, id, packet);
+            Messenger::handleMessage(this, client, id, packet);
         }
+
+        if (timeoutClock.getElapsedTime() > sf::seconds(1))
+        {
+            for (auto &clientName : timeoutList) {
+                auto itr = clients.find(clientName);
+                if (itr != clients.end()) { clients.erase(clientName); }
+            }
+            timeoutList.clear();
+            timeoutClock.restart();
+        }
+        mutex.unlock();
+
     }
 }

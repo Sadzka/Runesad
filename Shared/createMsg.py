@@ -15,11 +15,11 @@ HEADER_FORMAT = """#ifndef SADZA_{}_HPP
 
 namespace Msg {{
     struct {} {{
-        static const MsgType type = MessageType::{};
+        static const MsgType id = MessageType::{};
 {}
     }};
     struct {}Resp {{
-        static const MsgType type = MessageType::{}Resp;
+        static const MsgType id = MessageType::{}Resp;
         MessageResult result;
     }};
 }};
@@ -175,11 +175,11 @@ def create_class_header():
     global HEADER_FORMAT
     global includes_formatted
     global attributes_formatted
-    with open("include/Network/Messages/{}.hpp".format(class_name), "w") as file:
-        file.write(HEADER_FORMAT.format(class_name.upper(), class_name.upper(), includes_formatted, # Header
-                                        class_name, class_name, attributes_formatted, # Req
-                                        class_name, class_name, # Resp
-                                        class_name, class_name, class_name, class_name, # Packet
+    with open("include/Network/Messages/{}.hpp".format(class_name), "w+") as file:
+        file.write(HEADER_FORMAT.format(class_name.upper(), class_name.upper(), includes_formatted,  # Header
+                                        class_name, class_name, attributes_formatted,  # Req
+                                        class_name, class_name,  # Resp
+                                        class_name, class_name, class_name, class_name,  # Packet
                                         class_name.upper()))
 
 
@@ -197,7 +197,7 @@ def create_class_source():
 
         packet_op = packet_op + ";"
 
-    with open("src/Network/Messages/{}.cpp".format(class_name), "w") as file:
+    with open("src/Network/Messages/{}.cpp".format(class_name), "w+") as file:
         file.write(SOURCE_FORMAT.format(class_name,
                                         class_name, packet_op.replace("op", "<<"),
                                         class_name, packet_op.replace("op", ">>")))
@@ -205,7 +205,7 @@ def create_class_source():
 
 def add_msg_type():
     global class_name
-    with open("include/Network/Messages/MessageType.hpp", "r+") as file:
+    with open("include/Network/Messages/Base/MessageType.hpp", "r+") as file:
         content = file.read()
         content = content.replace("OutOfRange", "{},\n        OutOfRange".format(class_name))
         file.seek(0)
@@ -215,10 +215,12 @@ def add_msg_type():
 def add_msg_creator():
     global class_name
 
-    with open("include/Network/Messages/MsgCreator.hpp", "r+") as file:
+    with open("include/Network/Messages/Base/MsgCreator.hpp", "r+") as file:
         content = file.read()
         pos = content.find(ADD_MSG_FIND) + len(ADD_MSG_FIND)
-        content = content[:pos] + ADD_MSG_TEMPLATE.format(class_name, class_name) + content[pos:]
+        content = content[:pos] \
+                  + ADD_MSG_TEMPLATE.format(class_name, class_name) \
+                  + content[pos:]
 
         file.seek(0)
         file.write(content)
@@ -227,7 +229,7 @@ def add_msg_creator():
 def add_include():
     global class_name
 
-    with open("include/Network/Messages/AllMessages.hpp", "r+") as file:
+    with open("include/Network/Messages/Base/AllMessages.hpp", "r+") as file:
         content = file.read()
         pos = content.find("#endif //SADZA_ALLMESSAGES_HPP") - 1
         content = content[:pos] + "#include \"{}.hpp\"\n".format(class_name) + content[pos:]
@@ -248,11 +250,11 @@ def delete_msg_type():
     global class_name
 
     content = None
-    with open("include/Network/Messages/MessageType.hpp", "r") as file:
+    with open("include/Network/Messages/Base/MessageType.hpp", "r") as file:
         content = file.read()
 
     content = content.replace("        {},\n".format(class_name), "")
-    with open("include/Network/Messages/MessageType.hpp", "w") as file:
+    with open("include/Network/Messages/Base/MessageType.hpp", "w") as file:
         file.write(content)
 
 
@@ -260,11 +262,11 @@ def delete_msg_creator():
     global class_name
 
     content = None
-    with open("include/Network/Messages/MsgCreator.hpp", "r") as file:
+    with open("include/Network/Messages/Base/MsgCreator.hpp", "r") as file:
         content = file.read()
 
     content = content.replace(ADD_MSG_TEMPLATE.format(class_name, class_name), "")
-    with open("include/Network/Messages/MsgCreator.hpp", "w") as file:
+    with open("include/Network/Messages/Base/MsgCreator.hpp", "w") as file:
         file.write(content)
 
 
@@ -272,11 +274,11 @@ def delete_include():
     global class_name
 
     content = None
-    with open("include/Network/Messages/AllMessages.hpp", "r") as file:
+    with open("include/Network/Messages/Base/AllMessages.hpp", "r") as file:
         content = file.read()
 
     content = content.replace("#include \"{}.hpp\"\n".format(class_name), "")
-    with open("include/Network/Messages/AllMessages.hpp", "w") as file:
+    with open("include/Network/Messages/Base/AllMessages.hpp", "w") as file:
         file.write(content)
 
 

@@ -11,10 +11,12 @@
 
 #include <Sys/SysLog.hpp>
 #include "Client.hpp"
+#include "Games.hpp"
 
 #define SERVER_PORT 1111
 
 class Server {
+    friend class Messenger;
 public:
     Server();
 
@@ -31,6 +33,7 @@ private:
     void listenThreadFunction();
 
     std::unordered_map <std::string, std::shared_ptr<Client>> clients;
+    std::vector <std::string> timeoutList;
     sf::Thread listenThread;
     sf::Thread authenticateThread;
     bool running = true;
@@ -38,6 +41,8 @@ private:
     sf::Mutex mutex;
     SHA256_CTX context;
     sf::Clock clock;
+
+    Games games;
 };
 
 

@@ -6,7 +6,19 @@ namespace MessageType {
         Hearthbeat = 0,
         Authenticate = 1,
         AuthenticateResp,
-        OutOfRange
+        Logout,
+        CreateLobby,
+        CreateLobbyResp,
+        GetLobbyList,
+        GetLobbyListResp,
+        JoinLobby,
+        LeaveLobby,
+        LeaveLobbyResp,
+        DisbandLobby,
+        UpdateLobbyStatus,
+        CloseLobbySlot,
+        StartLobbyGame,
+        OutOfRange [[maybe_unused]]
     };
 }
 
