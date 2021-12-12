@@ -28,6 +28,8 @@ public:
 
     virtual void draw() = 0;
 
+    virtual void lateDraw() = 0;
+
     sf::View &getView() { return view; }
 
     bool isTranscendent() const { return transcendent; }

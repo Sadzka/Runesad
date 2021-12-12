@@ -1,9 +1,13 @@
 #include "Games.hpp"
+
+#include <sstream>
+#include <utility>
 #include "Network/Messages/LeaveLobby.hpp"
 #include "Network/Messages/UpdateLobbyStatus.hpp"
 #include "Network/Messages/StartLobbyGame.hpp"
 
-Lobby::Lobby(const std::shared_ptr<Client>& client, std::string &game_name) {
+Lobby::Lobby(const std::shared_ptr<Client>& client, std::string &game_name, std::string &mapInfoStr, std::string &mapName)
+        : mapInfo(mapInfoStr, mapName) {
     printf("owner: %p \n", &(*client));
     slots[0].player = client;
     printf("owner: %p \n", &(*slots[0].player));
@@ -65,9 +69,9 @@ void Lobby::closeSlot(sf::Uint8 slot) {
     updateStatus();
 }
 
-void Games::createLobby(const std::shared_ptr<Client>& client, std::string &name)
+void Games::createLobby(const std::shared_ptr<Client>& client, std::string &name, std::string &mapInfo, std::string &mapName)
 {
-    lobbies.emplace_back(client, name);
+    lobbies.emplace_back(Lobby(client, name, mapInfo, mapName));
     lobbies.back().updateStatus();
     client->lobby = &lobbies.back();
 }
@@ -137,6 +141,35 @@ Game::Game(Lobby *lobby) {
             slots[i].player->status = ClientStatus::InGame;
             slots[i].player->lobby = nullptr;
             slots[i].player->game = this;
+        }
+    }
+}
+
+MapInfo::MapInfo(std::string &mapFile, std::string &mapName) : mapFile(mapFile), mapName(mapName) {
+    std::stringstream ss;
+    ss << this->mapFile;
+
+    // Ignored by server
+    sf::Uint16 tilesNumber;
+    std::string tilesName;
+
+    ss  >> size.x >> size.y >> tilesNumber;
+    for (int i = 0; i < tilesNumber; ++i) {
+        ss >> tilesName;
+    }
+    // Ignored by server - end
+
+    ss >> flagPosition[0].x >> flagPosition[0].y >> flagPosition[1].x >> flagPosition[1].y;
+
+    const int layers = 2; // Server ignore layer 3
+    map.resize(layers);
+    for (int layer = 0; layer < layers; ++layer) {
+        map[layer].resize(size.x);
+        for (int x = 0; x < size.x; ++x) {
+            map[layer].resize(size.y);
+            for (int y = 0; y < size.x; ++y) {
+                ss >> map[layer][x][y];
+            }
         }
     }
 }

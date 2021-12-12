@@ -269,8 +269,8 @@ void StateMain::activate() {
     });
 
     auto buttonWE = tgui::Button::create("World Edit");
-    buttonWE->setSize({"50%", "16.67%"});
-    buttonWE->setPosition(0, 0);
+    buttonWE->setSize({"200", "36"});
+    buttonWE->setPosition({"50% - 100", "5"});
     gui->add(buttonWE);
 
     buttonWE->onMousePress([=](){
@@ -291,6 +291,10 @@ void StateMain::update(const float &dTime) {
 }
 
 void StateMain::draw() {
+
+}
+
+void StateMain::lateDraw() {
 
 }
 

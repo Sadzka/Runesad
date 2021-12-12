@@ -25,6 +25,13 @@ void StateManager::draw() {
     currentState->draw();
 }
 
+void StateManager::lateDraw() {
+    if (states.empty()) { return; }
+
+    SharedContext::getWindow()->getRenderWindow()->setView(currentState->getView());
+    currentState->lateDraw();
+}
+
 void StateManager::update(const float &dTime) {
     currentState->update(dTime);
 //    for (auto & state : states) {

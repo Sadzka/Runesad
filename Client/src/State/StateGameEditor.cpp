@@ -122,6 +122,10 @@ void StateGameEditor::draw() {
     worldEditor.draw();
 }
 
+void StateGameEditor::lateDraw() {
+
+}
+
 void StateGameEditor::clickMenuItem(const std::string &option) {
     if (option == "File Open") {
         worldEditor.showFileDialog(

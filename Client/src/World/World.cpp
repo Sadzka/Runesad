@@ -48,6 +48,9 @@ void World::loadWorld(const std::string &worldname) {
         addTileset(tilesetName);
     }
 
+    file >> flagPosition[BLUE_FLAG_INDEX].x >> flagPosition[BLUE_FLAG_INDEX].y;
+    file >> flagPosition[RED_FLAG_INDEX].x  >> flagPosition[RED_FLAG_INDEX].y;
+
     for (unsigned int layer = 0; layer < layersNumber; layer++) {
         for (unsigned int i = 0; i < size.y; i++) {
             for (unsigned int j = 0; j < size.x; j++) {
@@ -77,7 +80,10 @@ void World::saveWorld(const std::string &path) {
     for (auto tileset : tilesets) {
         file << tileset.getName() << " ";
     }
-    file << "\n\n";
+    file << "\n";
+
+    file << flagPosition[BLUE_FLAG_INDEX].x << ' ' << flagPosition[BLUE_FLAG_INDEX].y << '\n';
+    file << flagPosition[RED_FLAG_INDEX].x  << ' ' << flagPosition[RED_FLAG_INDEX].y << '\n';
 
     for (unsigned int layer = 0; layer < layersNumber; layer++) {
         for (unsigned int i = 0; i < size.y; i++) {
@@ -93,7 +99,6 @@ void World::saveWorld(const std::string &path) {
 }
 
 void World::draw() {
-    //if (world == nullptr) return; //throw std::runtime_error("World::draw Trying to draw empty world.\n");
 
     sf::View view = SharedContext::getWindow()->getRenderWindow()->getView();
     sf::FloatRect vp = sf::FloatRect(
@@ -124,6 +129,41 @@ void World::draw() {
                         tile->draw(i, j);
                         continue;
                     }
+                }
+            }
+        }
+    }
+}
+
+void World::lateDraw() {
+
+    sf::View view = SharedContext::getWindow()->getRenderWindow()->getView();
+    sf::FloatRect vp = sf::FloatRect(
+            view.getCenter().x - view.getSize().x / 2,
+            view.getCenter().y - view.getSize().y / 2,
+            view.getSize().x,
+            view.getSize().y
+    );
+
+    sf::RectangleShape rect(sf::Vector2f(32, 32));
+    rect.setFillColor(sf::Color::White);
+    int layer = 2;
+    for (int i = vp.left / tilesize; i < (vp.left + vp.width) / tilesize && i < size.x; i++) {
+        for (int j = vp.top / tilesize; j < (vp.top + vp.height) / tilesize && j < size.y; j++) {
+
+            if (i < 0 || j < 0) { continue; }
+
+            if (world[layer][i][j] == 0 && layer == 0) {
+                rect.setPosition(i * 32, j * 32);
+                SharedContext::getWindow()->draw(rect);
+                continue;
+            }
+
+            for (Tileset &tileset : tilesets) {
+                Tile *tile = tileset.inRange(world[layer][i][j]);
+                if (tile) {
+                    tile->draw(i, j);
+                    continue;
                 }
             }
         }
@@ -176,7 +216,6 @@ void World::allocateMemory() {
             world[i][j].resize(size.y);
         }
     }
-
 }
 
 void World::closeWorld() {

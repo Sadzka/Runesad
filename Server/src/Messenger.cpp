@@ -22,7 +22,7 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, s
 
             SysLog::Print(SysLog::Severity::Info, "[%s] CreateLobby - %s",
                           client->username.c_str(), msg.name.c_str());
-            server->games.createLobby(client, msg.name);
+            server->games.createLobby(client, msg.name, msg.mapFile, msg.mapName);
             client->status = ClientStatus::InLobby;
             break;
         }
@@ -40,8 +40,11 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, s
             packet >> req;
 
             JoinLobbyResp resp{};
-            if (games->joinLobby(client, req.name)) {
+            Lobby * lobby = games->joinLobby(client, req.name);
+            if (lobby) {
                 resp.result = MessageResult::Ok;
+                resp.mapFile = lobby->mapInfo.mapFile;
+                resp.mapName = lobby->mapInfo.mapName;
             }
             else {
                 resp.result = MessageResult::LobbyNotExist;

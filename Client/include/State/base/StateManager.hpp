@@ -20,6 +20,8 @@ public:
 
     void draw();
 
+    void lateDraw();
+
     void update(const float &dTime);
 
     void removeState(const StateType &type);

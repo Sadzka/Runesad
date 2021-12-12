@@ -54,6 +54,7 @@ void Game::render() {
     SharedContext::getStateManager()->draw();
     SharedContext::getGui()->draw();
     //SharedContext::getEntityManager()->draw();
+    SharedContext::getStateManager()->lateDraw();
 
     SharedContext::getWindow()->endDraw();
 }

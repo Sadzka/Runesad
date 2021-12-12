@@ -55,6 +55,14 @@ void Messenger::handleMessage(Client *client, MessageId id, sf::Packet &packet)
                 btn->setVisible(true);
             }
 
+            std::fstream file;
+            file.open("Data/maps/" + msg.mapName + ".map");
+            if (!file.good()) throw std::runtime_error("Failed open file!");
+            file << msg.mapFile;
+            file.close();
+
+            SharedContext::getGui()->get<tgui::Label>("mapNameLabel")->setText(msg.mapName);
+
             break;
         }
         case UpdateLobbyStatus::id:

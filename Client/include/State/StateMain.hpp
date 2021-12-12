@@ -26,6 +26,8 @@ public:
 
     virtual void draw();
 
+    virtual void lateDraw();
+
     void cancelAuthenticateInProgress(MessageResult result = MessageResult::UnknownStatus);
 
 private:

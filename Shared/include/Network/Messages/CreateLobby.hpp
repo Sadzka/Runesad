@@ -5,13 +5,15 @@
 #include "Network/Messages/Base/MessageType.hpp"
 #include "Network/Messages/Base/MessageResult.hpp"
 #include <string>
+#include <SFML/System/Vector2.hpp>
 
 
 namespace Msg {
     struct CreateLobby {
         static const MsgType id = MessageType::CreateLobby;
         std::string name;
-
+        std::string mapName;
+        std::string mapFile;
     };
     struct CreateLobbyResp {
         static const MsgType id = MessageType::CreateLobbyResp;

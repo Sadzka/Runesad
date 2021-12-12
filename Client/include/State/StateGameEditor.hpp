@@ -25,6 +25,8 @@ public:
 
     virtual void draw();
 
+    virtual void lateDraw();
+
     void clickMenuItem(const std::string &option);
 
     void openWorldFile(const tgui::String filename);

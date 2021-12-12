@@ -29,5 +29,9 @@ void StateGame::update(const float &dTime) {
 }
 
 void StateGame::draw() {
-    //SharedContext::getWorld()->draw();
+    SharedContext::getWorld()->draw();
+}
+
+void StateGame::lateDraw() {
+    SharedContext::getWorld()->lateDraw();
 }

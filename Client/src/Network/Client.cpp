@@ -4,6 +4,7 @@
 #include "Network/Messages/Base/MsgCreator.hpp"
 #include "Base/SharedContext.hpp"
 #include "Network/Messenger.hpp"
+#include <fstream>
 
 void Client::listenThreadFunction() {
     using namespace Msg;
@@ -51,6 +52,20 @@ void Client::sendLogout() {
 void Client::sendCreateLobby(const std::string &name) {
     Msg::CreateLobby msg;
     msg.name = name;
+
+    std::string filename = SharedContext::getGui()->get<tgui::Label>("mapNameLabel")->getText().toStdString();
+    std::fstream file;
+    file.open("Data/maps/" + filename, std::ios::in);
+    if (file.good()) throw std::runtime_error("Error in createing file");
+    std::string line;
+    while(getline(file, line))
+    {
+        msg.mapFile += line + '\n';
+    }
+    file.close();
+
+    msg.mapName = filename;
+
     socket.send(msg);
 }
 void Client::sendGetLobbyList() {

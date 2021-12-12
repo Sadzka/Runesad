@@ -3,12 +3,14 @@
 #ifndef SADZA_WORLD_HPP
 #define SADZA_WORLD_HPP
 
-
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <vector>
 #include "World/Tile.hpp"
 #include "Tileset.hpp"
+
+#define BLUE_FLAG_INDEX 0
+#define RED_FLAG_INDEX 1
 
 class World {
     friend class WorldEditor;
@@ -27,6 +29,8 @@ public:
 //    sf::Int16 getTileOnPos(const int &x, const int &y) const;
 
     void draw();
+
+    void lateDraw();
 
     void loadWorld(const std::string &worldname);
 
@@ -48,9 +52,12 @@ public:
 
     void closeWorld();
 
+    sf::Vector2f getBlueFlagPosition() { return sf::Vector2f(flagPosition[BLUE_FLAG_INDEX].x, flagPosition[BLUE_FLAG_INDEX].y); }
+    sf::Vector2f getRedFlagPosition() { return sf::Vector2f(flagPosition[RED_FLAG_INDEX].x, flagPosition[RED_FLAG_INDEX].y); }
+
 private:
     void allocateMemory();
-
+    sf::Vector2u flagPosition[2];
 
     std::vector<Tileset> tilesets;
     sf::Vector2i size;

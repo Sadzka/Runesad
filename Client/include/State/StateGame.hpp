@@ -24,6 +24,7 @@ public:
     virtual void update(const float & dTime);
 
     virtual void draw();
+    virtual void lateDraw();
 };
 
 

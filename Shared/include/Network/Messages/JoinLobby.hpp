@@ -5,6 +5,7 @@
 #include "Network/Messages/Base/MessageType.hpp"
 #include "Network/Messages/Base/MessageResult.hpp"
 #include <string>
+#include <SFML/System/Vector2.hpp>
 
 
 namespace Msg {
@@ -15,6 +16,8 @@ namespace Msg {
     struct JoinLobbyResp {
         static const MsgType id = MessageType::JoinLobbyResp;
         MessageResult result;
+        std::string mapFile;
+        std::string mapName;
     };
 }
 
