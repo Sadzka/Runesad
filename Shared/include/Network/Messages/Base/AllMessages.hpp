@@ -14,5 +14,7 @@
 #include "Network/Messages/UpdateLobbyStatus.hpp"
 #include "Network/Messages/CloseLobbySlot.hpp"
 #include "Network/Messages/StartLobbyGame.hpp"
+#include "Network/Messages/GameEnd.hpp"
+#include "Network/Messages/MoveInd.hpp"
 
 #endif //SADZA_ALLMESSAGES_HPP

@@ -8,18 +8,17 @@
 
 struct Slot
 {
-    bool closed = false;
+    sf::Uint8 closed = false;
     std::shared_ptr <Client> player;
 };
 
 struct Lobby
 {
     std::string name;
-    Slot slots[MAX_PLAYERS];
+    Slot slots[8];
 
-    Lobby(std::shared_ptr<Client> client, std::string &game_name);
+    Lobby(const std::shared_ptr<Client>& client, std::string &game_name);
 
-    bool addPlayer(const std::shared_ptr<Client>&);
     bool removePlayer(const std::shared_ptr<Client>&);
     std::shared_ptr <Client> getOwner() { return slots[0].player; }
 
@@ -32,7 +31,7 @@ struct Game
 {
     Slot slots[MAX_PLAYERS];
 
-    Game(Lobby *lobby);
+    explicit Game(Lobby *lobby);
 };
 
 class Games {

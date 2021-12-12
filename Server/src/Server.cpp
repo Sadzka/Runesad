@@ -49,7 +49,7 @@ void Server::authenticateThreadFunction() {
         client->socket.setBlocking(false);
 
         mutex.lock();
-        clients.emplace(client->username, client);
+        clients.emplace(nextClientId++, client);
         mutex.unlock();
     }
 }
@@ -62,6 +62,7 @@ void Server::listenThreadFunction()
         mutex.lock();
         for (auto &pair : clients) {
             sf::Packet packet;
+            sf::Uint64 clientId = pair.first;
             std::shared_ptr<Client> &client = pair.second;
             if (client->socket.receive(packet) != ssf::Socket::Done) {
                 continue;
@@ -107,11 +108,12 @@ void Server::listenThreadFunction()
                     SysLog::Print(SysLog::Severity::Info, "[Authenticate Thread] Result (%s): Ok",
                                   msg.username.c_str());
                     resp.result = MessageResult::Ok;
+                    client->username = msg.username;
                     client->authenticated = true;
                 }
                 else
                 {
-                    SysLog::Print(SysLog::Severity::Info, "[Authenticate Thread] Result (%s): Ok",
+                    SysLog::Print(SysLog::Severity::Info, "[Authenticate Thread] Result (%s): InvalidUsernameOrPassword",
                                   msg.username.c_str());
                     resp.result = MessageResult::InvalidUsernameOrPassword;
                 }
@@ -124,14 +126,16 @@ void Server::listenThreadFunction()
                 client->hearthbeat = clock.getElapsedTime().asMicroseconds();
                 continue;
             }
-            Messenger::handleMessage(this, client, id, packet);
+
+            if (!client->authenticated) continue;
+            Messenger::handleMessage(this, client, clientId, id, packet);
         }
 
         if (timeoutClock.getElapsedTime() > sf::seconds(1))
         {
-            for (auto &clientName : timeoutList) {
-                auto itr = clients.find(clientName);
-                if (itr != clients.end()) { clients.erase(clientName); }
+            for (auto &clientId : timeoutList) {
+                auto itr = clients.find(clientId);
+                if (itr != clients.end()) { clients.erase(clientId); }
             }
             timeoutList.clear();
             timeoutClock.restart();

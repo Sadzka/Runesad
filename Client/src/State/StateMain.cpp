@@ -70,9 +70,14 @@ void StateMain::activate() {
     SharedContext::getGui()->add(createGameButton);
 
     auto joinGameButton = tgui::Button::create("Join Game");
-    joinGameButton->setSize({"400", "36"});
+    joinGameButton->setSize({"200", "36"});
     joinGameButton->setPosition({"150% - 200", "100% - 41"});
     SharedContext::getGui()->add(joinGameButton);
+
+    auto refreshGameButton = tgui::Button::create("Refresh");
+    refreshGameButton->setSize({"200", "36"});
+    refreshGameButton->setPosition({"150%", "100% - 41"});
+    SharedContext::getGui()->add(refreshGameButton);
 
     auto exitGameButton = tgui::Button::create("Exit Game");
     exitGameButton->setSize({"200", "36"});
@@ -84,13 +89,19 @@ void StateMain::activate() {
     gameNameEditBox->setSize({"200", "36"});
     gameNameEditBox->setPosition({"100% + 5", "200% - 41"});
     gameNameEditBox->setDefaultText("New Game Name");
-    SharedContext::getGui()->add(gameNameEditBox);
+    SharedContext::getGui()->add(gameNameEditBox, "gameNameEditBox");
 
     auto gameApplyButton = tgui::Button::create();
     gameApplyButton->setSize({"200", "36"});
     gameApplyButton->setPosition({"100% + 210", "200% - 41"});
     gameApplyButton->setText("Create");
-    SharedContext::getGui()->add(gameApplyButton);
+    SharedContext::getGui()->add(gameApplyButton, "applyButton");
+
+    auto selectMapButton = tgui::Button::create();
+    selectMapButton->setSize({"200", "36"});
+    selectMapButton->setPosition({"100% + 5", "200% - 82"});
+    selectMapButton->setText("Select Map");
+    SharedContext::getGui()->add(selectMapButton, "selectMapButton");
 
     auto gameCancelButton = tgui::Button::create();
     gameCancelButton->setSize({"200", "36"});
@@ -103,7 +114,7 @@ void StateMain::activate() {
     gameStartButton->setPosition({"200% - 205", "200% - 41"});
     gameStartButton->setText("Start");
     gameStartButton->setEnabled(false);
-    SharedContext::getGui()->add(gameStartButton);
+    SharedContext::getGui()->add(gameStartButton, "startButton");
 
     auto gamePlayerList = tgui::ListView::create();
     gamePlayerList->setEnabled(false);
@@ -117,9 +128,14 @@ void StateMain::activate() {
     gamePlayerList->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     gamePlayerList->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
     for (int i = 1; i <= 8; ++i) {
-        gamePlayerList->addItem({std::to_string(i), "", "Closed"});
+        gamePlayerList->addItem({std::to_string(i), "", "Closed 2"});
     }
-    SharedContext::getGui()->add(gamePlayerList);
+    SharedContext::getGui()->add(gamePlayerList, "playerList");
+
+    auto mapNameLabel = tgui::Label::create("");
+    mapNameLabel->setSize({"200", "36"});
+    mapNameLabel->setPosition({"100% + 5", "200% - 123"});
+    SharedContext::getGui()->add(mapNameLabel, "mapNameLabel");
 
     tgui::Button::Ptr gameUserControlButton[8];
     for (int i = 0; i < 8; ++i) {
@@ -127,16 +143,11 @@ void StateMain::activate() {
         gameUserControlButton[i] = tgui::Button::create("o/c");
         gameUserControlButton[i]->setSize({36, 36});
         gameUserControlButton[i]->setPosition({"150% - 62", "150% - 144 + " + posY});
-        SharedContext::getGui()->add(gameUserControlButton[i]);
+        SharedContext::getGui()->add(gameUserControlButton[i], "gameUserControlButton" + std::to_string(i));
 
         gameUserControlButton[i]->onPress([=]() {
-            auto row = gamePlayerList->getItemRow(i);
-            if (row[2] == "Closed") {
-                gamePlayerList->changeSubItem(i, 2, "Open");
-            } else {
-                // TODO kick msg
-                gamePlayerList->changeSubItem(i, 2, "Closed");
-            }
+            Client *client = SharedContext::getClient();
+            client->sendCloseLobbySlot(i);
         });
     }
 
@@ -168,6 +179,10 @@ void StateMain::activate() {
         }
     });
 
+    selectMapButton->onPress([this]() {
+        showFileDialog();
+    });
+
     logoutButton->onPress([=]() {
         Client *client = SharedContext::getClient();
         client->sendLogout();
@@ -180,63 +195,67 @@ void StateMain::activate() {
     });
 
     joinGameButton->onPress([=]() {
-        printf("%d \n", gameListComboList->getSelectedItemIndex());
-        if (gameListComboList->getSelectedItemIndex() != -1) // TODO
+        int index = gameListComboList->getSelectedItemIndex();
+        if (index != -1)
         {
-            screenAnimation.startAnimation(ScreenAnimation::Direction::Up, sf::seconds(2));
-            gameStartButton->setEnabled(false);
-            gameApplyButton->setEnabled(false);
-            gamePlayerList->setEnabled(false);
-            for (auto &button : gameUserControlButton) {
-                button->setEnabled(false);
-                button->setVisible(true);
-            }
+            Client *client = SharedContext::getClient();
+            std::string gameName = gameListComboList->getItem(index).toStdString();
+            client->sendJoinLobby(gameName);
         }
     });
 
+    refreshGameButton->onPress([=]() {
+        Client *client = SharedContext::getClient();
+        client->sendGetLobbyList();
+    });
+
     createGameButton->onPress([=]() {
-        if (true) // TODO
-        {
-            screenAnimation.startAnimation(ScreenAnimation::Direction::Up, sf::seconds(2));
-            gameStartButton->setEnabled(false);
-            gameApplyButton->setEnabled(true);
-            gamePlayerList->setEnabled(true);
-            gamePlayerList->setVisible(false);
-            gameUserControlButton[0]->setEnabled(false);
-            gameUserControlButton[0]->setVisible(false);
-            for (int i = 1; i < 8; ++i) {
-                gameUserControlButton[i]->setVisible(false);
-                gameUserControlButton[i]->setEnabled(true);
-            }
+        screenAnimation.startAnimation(ScreenAnimation::Direction::Up, sf::seconds(1));
+        gameStartButton->setEnabled(false);
+        gameApplyButton->setEnabled(false);
+        gamePlayerList->setEnabled(true);
+        selectMapButton->setEnabled(true);
+        gamePlayerList->setVisible(false);
+        gameUserControlButton[0]->setEnabled(false);
+        gameUserControlButton[0]->setVisible(false);
+        for (int i = 1; i < 8; ++i) {
+            gameUserControlButton[i]->setVisible(false);
+            gameUserControlButton[i]->setEnabled(true);
         }
     });
 
     gameApplyButton->onPress([=]() {
-        // TODO send to server
-        gameApplyButton->setText("Apply");
+
+        Client *client = SharedContext::getClient();
+
+        std::string gameName = gameNameEditBox->getText().toStdString();
+        if (gameName == "") return;
+
+        client->sendCreateLobby(gameName);
+
+        gameNameEditBox->setEnabled(false);
+        gameApplyButton->setEnabled(false);
+        gameApplyButton->setEnabled(false);
+        selectMapButton->setEnabled(false);
         gameStartButton->setEnabled(true);
         for (auto &button : gameUserControlButton) {
             button->setVisible(true);
         }
 
-        for (int i = 0; i <= 8; ++i) {
-            gamePlayerList->addItem({std::to_string(i), "x", "Closed"});
-            // TODO kick player
-        }
         gamePlayerList->setVisible(true);
     });
 
     gameStartButton->onPress([=]() {
-        // TODO send to server
+        Client *client = SharedContext::getClient();
+
+        client->sendStartLobbyGame();
     });
 
     gameCancelButton->onPress([=]() {
-        // TODO send to server
-        screenAnimation.startAnimation(ScreenAnimation::Direction::Down, sf::seconds(2));
-        gameStartButton->setEnabled(false);
-        gameNameEditBox->setText("");
-        gameApplyButton->setText("Create");
 
+        Client *client = SharedContext::getClient();
+
+        client->sendLeaveLobby();
     });
 
     cancelAuthButton->onPress([=]() {
@@ -248,17 +267,15 @@ void StateMain::activate() {
         loginLabel->setVisible(false);
         cancelAuthenticateInProgress();
     });
-#ifdef _DEBUG_
+
     auto buttonWE = tgui::Button::create("World Edit");
     buttonWE->setSize({"50%", "16.67%"});
     buttonWE->setPosition(0, 0);
     gui->add(buttonWE);
 
-
     buttonWE->onMousePress([=](){
         SharedContext::getStateManager()->switchTo(StateType::GameEditor);
     });
-#endif
 }
 
 void StateMain::deactivate() {
@@ -289,7 +306,7 @@ void StateMain::cancelAuthenticateInProgress(MessageResult result) {
     {
         case MessageResult::Ok:
         {
-            screenAnimation.startAnimation(ScreenAnimation::Direction::Left, sf::seconds(2));
+            screenAnimation.startAnimation(ScreenAnimation::Direction::Left, sf::seconds(1));
             cancelAuthButton->setVisible(false);
             loginLabel->setVisible(false);
 
@@ -316,9 +333,32 @@ void StateMain::cancelAuthenticateInProgress(MessageResult result) {
         }
         default:
         {
+            loginLabel->setText("Can't connect to server");
             break;
         }
     }
 
     connectionStatus.inProgress = false;
+}
+
+void StateMain::showFileDialog() {
+    auto fileDialog = tgui::FileDialog::create("Select Map");
+    fileDialog->setFileMustExist(true);
+    fileDialog->setPosition(SharedContext::getGui()->get<tgui::ListView>("playerList")->getPosition());
+    fileDialog->setVisible(true);
+    fileDialog->setPath(tgui::Filesystem::getCurrentWorkingDirectory().asString() + "/Data/maps/");
+    fileDialog->setFileTypeFilters({{"Map file", {"*.map"}}});
+    SharedContext::getGui()->add(fileDialog, "fileDialog");
+
+
+    auto x = SharedContext::getGui()->get<tgui::FileDialog>("fileDialog");
+    std::cout << x << std::endl;
+
+    fileDialog->onFileSelect([=](const std::vector<tgui::Filesystem::Path> &selectedFiles) {
+        for (const tgui::Filesystem::Path &path : selectedFiles) {
+
+            SharedContext::getGui()->get<tgui::Label>("mapNameLabel")->setText(path.getFilename().toStdString());
+            SharedContext::getGui()->get<tgui::Button>("applyButton")->setEnabled(true);
+        }
+    });
 }

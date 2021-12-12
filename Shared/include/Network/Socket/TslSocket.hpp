@@ -216,6 +216,7 @@ namespace ssf {
         ////////////////////////////////////////////////////////////
         template<class T>
         Status send(const T &msg) {
+            printf("Sending msg: %#010x\n", T::id);
             sf::Packet packet;
             packet << msg.id;
             packet << msg;

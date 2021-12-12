@@ -32,8 +32,8 @@ private:
 
     void listenThreadFunction();
 
-    std::unordered_map <std::string, std::shared_ptr<Client>> clients;
-    std::vector <std::string> timeoutList;
+    std::unordered_map <sf::Uint64, std::shared_ptr<Client>> clients;
+    std::vector <sf::Uint64> timeoutList;
     sf::Thread listenThread;
     sf::Thread authenticateThread;
     bool running = true;
@@ -41,6 +41,7 @@ private:
     sf::Mutex mutex;
     SHA256_CTX context;
     sf::Clock clock;
+    sf::Uint64 nextClientId = 0;
 
     Games games;
 };

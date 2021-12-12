@@ -14,7 +14,7 @@ namespace Msg {
         sf::Uint8 open[8];
         std::string playerName[8];
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::UpdateLobbyStatus &msg);
 

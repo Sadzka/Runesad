@@ -5,15 +5,16 @@ sf::Packet &operator<<(sf::Packet &packet, const Msg::GetLobbyList &msg) { retur
 sf::Packet &operator>>(sf::Packet &packet, Msg::GetLobbyList &msg) { return packet; }
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::GetLobbyListResp &msg) {
-    packet << msg.lobbies.size();
-    for (auto & lobbie : msg.lobbies) {
+    sf::Uint32 x = msg.lobbies.size();
+    packet << x;
+    for (auto &lobbie : msg.lobbies) {
         packet << lobbie;
     }
     return packet;
 }
 
 sf::Packet &operator>>(sf::Packet &packet, Msg::GetLobbyListResp &msg) {
-    int x;
+    sf::Uint32 x;
     packet >> x;
     for (int i = 0; i < x; i++)  {
         std::string temp;

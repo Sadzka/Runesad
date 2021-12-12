@@ -17,7 +17,7 @@ namespace Msg {
         static const MessageId id = MessageType::AuthenticateResp;
         MessageResult result;
     };
-};
+}
 
 sf::Packet& operator <<(sf::Packet& packet, const Msg::Authenticate& msg);
 sf::Packet& operator >>(sf::Packet& packet, Msg::Authenticate& msg);

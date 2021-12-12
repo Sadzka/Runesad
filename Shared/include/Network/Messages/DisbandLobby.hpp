@@ -10,7 +10,7 @@ namespace Msg {
     struct DisbandLobby {
         static const MsgType id = MessageType::DisbandLobby;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::DisbandLobby &msg);
 

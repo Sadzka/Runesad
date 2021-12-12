@@ -1,6 +1,6 @@
 #include "Messenger.hpp"
 
-void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, MessageId id, sf::Packet &packet)
+void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, sf::Uint64 clientId, MessageId id, sf::Packet &packet)
 {
     using namespace Msg;
     Games *games = &server->games;
@@ -10,13 +10,16 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, M
         {
             SysLog::Print(SysLog::Severity::Info, "[%s] Logout",
                           client->username.c_str());
-            server->timeoutList.push_back(client->username);
+            server->timeoutList.push_back(clientId);
             break;
         }
         case MsgType::CreateLobby:
         {
             CreateLobby msg;
             packet >> msg;
+
+            if (client->lobby) break;
+
             SysLog::Print(SysLog::Severity::Info, "[%s] CreateLobby - %s",
                           client->username.c_str(), msg.name.c_str());
             server->games.createLobby(client, msg.name);
@@ -29,10 +32,10 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, M
             resp.lobbies = games->getLobbyList();
 
             client->send(resp);
+            break;
         }
         case MsgType::JoinLobby:
         {
-            Lobby *lobby = client->lobby;
             JoinLobby req;
             packet >> req;
 
@@ -44,46 +47,50 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, M
                 resp.result = MessageResult::LobbyNotExist;
             }
             client->send(resp);
-
-            lobby->updateStatus();
+            break;
         }
         case MsgType::LeaveLobby:
         {
             Lobby *lobby = client->lobby;
-            if (client->lobby != nullptr) {
-                client->lobby->removePlayer(client);
-
-                LeaveLobbyResp resp;
-                client->send(resp);
-            }
-            lobby->updateStatus();
-        }
-        case MsgType::DisbandLobby:
-        {
-            Lobby *lobby = client->lobby;
-            if (client->lobby->getOwner() == client)
+            if (client->lobby != nullptr)
             {
-                games->removeLobby(lobby->name);
+                if (client->lobby->getOwner() == client)
+                {
+                    games->removeLobby(lobby->name);
+                    break;
+                }
+                client->lobby->removePlayer(client);
             }
+
+            LeaveLobbyResp resp;
+            client->send(resp);
+            break;
         }
+        case MsgType::DisbandLobby: { break; } // included in leave lobby
         case MsgType::CloseLobbySlot:
         {
             Lobby *lobby = client->lobby;
-            if (client->lobby->getOwner() == client)
+            if (lobby != nullptr)
             {
-                CloseLobbySlot req{};
-                packet >> req;
-                client->lobby->closeSlot(req.slot);
+                if (client->lobby->getOwner() == client) {
+                    CloseLobbySlot req{};
+                    packet >> req;
+                    client->lobby->closeSlot(req.slot);
+                }
+                lobby->updateStatus();
             }
-            lobby->updateStatus();
+            break;
         }
         case MsgType::StartLobbyGame:
         {
+            SysLog::Print(SysLog::Severity::Info, "Received StartLobbyGame");
             Lobby *lobby = client->lobby;
-            if (client->lobby->getOwner() == client)
-            {
-                games->startGame(lobby);
+            if (lobby) {
+                if (lobby->getOwner() == client) {
+                    games->startGame(lobby);
+                }
             }
+            break;
         }
 
         default:

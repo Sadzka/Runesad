@@ -12,7 +12,7 @@ namespace Msg {
         static const MsgType id = MessageType::CloseLobbySlot;
         sf::Uint8 slot;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::CloseLobbySlot &msg);
 

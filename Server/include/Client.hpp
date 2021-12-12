@@ -3,6 +3,7 @@
 #include "Network/Socket/TslSocket.hpp"
 
 class Lobby;
+class Game;
 
 enum class ClientStatus
 {
@@ -15,9 +16,10 @@ struct Client
 {
     ClientStatus status = ClientStatus::Idle;
     ssf::TslSocket socket;
-    std::string username = "";
+    std::string username;
     sf::Uint64 hearthbeat = 0;
-    Lobby * lobby;
+    Lobby *lobby = nullptr;
+    Game *game = nullptr;
     bool authenticated = false;
 
     Client() : socket(ssf::SocketSide::Server) {}

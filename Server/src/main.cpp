@@ -1,5 +1,3 @@
-
-
 #include <Sys/SysLog.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <Server.hpp>

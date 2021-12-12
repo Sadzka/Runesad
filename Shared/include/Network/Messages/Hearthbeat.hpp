@@ -10,7 +10,7 @@ namespace Msg {
     struct Hearthbeat {
         static const MessageId id = MessageType::Hearthbeat;
     };
-};
+}
 
 sf::Packet& operator <<(sf::Packet& packet, const Msg::Hearthbeat& msg);
 sf::Packet& operator >>(sf::Packet& packet, Msg::Hearthbeat& msg);

@@ -15,7 +15,7 @@ namespace Msg {
         static const MsgType id = MessageType::GetLobbyListResp;
         std::vector < std::string > lobbies;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::GetLobbyList &msg);
 

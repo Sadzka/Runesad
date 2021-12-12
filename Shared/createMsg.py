@@ -22,7 +22,7 @@ namespace Msg {{
         static const MsgType id = MessageType::{}Resp;
         MessageResult result;
     }};
-}};
+}}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::{} &msg);
 
@@ -36,9 +36,9 @@ sf::Packet &operator>>(sf::Packet &packet, Msg::{} &msg);
 """
 SOURCE_FORMAT = """#include "Network/Messages/{}.hpp"
 
-sf::Packet &operator<<(sf::Packet &packet, const Msg::{} &msg) {{ {}}}
+sf::Packet &operator<<(sf::Packet &packet, const Msg::{} &msg) {{ return packet{}; }}
 
-sf::Packet &operator>>(sf::Packet &packet, Msg::{} &msg) {{ {}}}
+sf::Packet &operator>>(sf::Packet &packet, Msg::{} &msg) {{ return packet{}; }}
 """
 ADD_MSG_FIND = """template <unsigned M, unsigned DUMMY>
         struct Loop {
@@ -163,9 +163,9 @@ def parse_argument():
         if argc < 3:
             print("{}Argument -d requires mesage name!{}".format(Fore.RED, Fore.RESET))
             return False
-        class_name = str(sys.argv[2]).capitalize()
+        class_name = str(sys.argv[2])
     else:
-        class_name = str(sys.argv[1]).capitalize()
+        class_name = str(sys.argv[1])
 
     return True
 
@@ -190,12 +190,9 @@ def create_class_source():
 
     packet_op = ""
     if len(attribute_list):
-        packet_op = "packet "
 
         for attribute in attribute_list:
-            packet_op = packet_op + " op " + attribute
-
-        packet_op = packet_op + ";"
+            packet_op = packet_op + " op " + "msg." + attribute
 
     with open("src/Network/Messages/{}.cpp".format(class_name), "w+") as file:
         file.write(SOURCE_FORMAT.format(class_name,
@@ -219,7 +216,7 @@ def add_msg_creator():
         content = file.read()
         pos = content.find(ADD_MSG_FIND) + len(ADD_MSG_FIND)
         content = content[:pos] \
-                  + ADD_MSG_TEMPLATE.format(class_name, class_name) \
+                  + ADD_MSG_TEMPLATE.format(class_name, class_name, class_name, class_name) \
                   + content[pos:]
 
         file.seek(0)
@@ -232,7 +229,7 @@ def add_include():
     with open("include/Network/Messages/Base/AllMessages.hpp", "r+") as file:
         content = file.read()
         pos = content.find("#endif //SADZA_ALLMESSAGES_HPP") - 1
-        content = content[:pos] + "#include \"{}.hpp\"\n".format(class_name) + content[pos:]
+        content = content[:pos] + '#include "Network/Messages/{}.hpp"\n'.format(class_name) + content[pos:]
 
         file.seek(0)
         file.write(content)

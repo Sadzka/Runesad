@@ -1,5 +1,5 @@
 //
-// Created by Sadza on 13.06.2021.
+// Created on 13.06.2021.
 //
 
 #include "State/base/StateManager.hpp"
@@ -8,7 +8,7 @@
 StateManager::StateManager() : currentState(nullptr) {
     registerState<StateMain>(StateType::Main);
     registerState<StateGame>(StateType::Game);
-    // registerState<StateGameEditor>(StateType::GameEditor);
+    registerState<StateGameEditor>(StateType::GameEditor);
 }
 
 StateManager::~StateManager() {

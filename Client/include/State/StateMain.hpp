@@ -8,6 +8,7 @@
 #include "State/base/State.hpp"
 
 class StateMain : public State {
+    friend class Messenger;
 public:
     StateMain();
 
@@ -28,7 +29,7 @@ public:
     void cancelAuthenticateInProgress(MessageResult result = MessageResult::UnknownStatus);
 
 private:
-
+    std::string mapName;
     struct ConnectionStatus {
         bool inProgress = false;
         float endTime;
@@ -36,6 +37,8 @@ private:
     float eTime;    //elapsedTime
     ScreenAnimation screenAnimation;
     ConnectionStatus connectionStatus;
+
+    static void showFileDialog();
 };
 
 

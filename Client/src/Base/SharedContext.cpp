@@ -7,3 +7,4 @@ tgui::Gui *SharedContext::gui = new tgui::Gui();
 Window *SharedContext::window = new Window();
 StateManager *SharedContext::stateManager = new StateManager();
 Client *SharedContext::client = new Client();
+World *SharedContext::world = new World();

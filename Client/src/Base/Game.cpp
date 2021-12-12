@@ -1,7 +1,3 @@
-//
-// Created by Sadza on 12.06.2021.
-//
-
 #include "Base/Game.hpp"
 
 void Game::FPSLimit() {

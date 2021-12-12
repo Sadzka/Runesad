@@ -3,6 +3,7 @@
 #include "Network/Messages/Base/AllMessages.hpp"
 #include "Network/Messages/Base/MsgCreator.hpp"
 #include "Base/SharedContext.hpp"
+#include "Network/Messenger.hpp"
 
 void Client::listenThreadFunction() {
     using namespace Msg;
@@ -10,26 +11,12 @@ void Client::listenThreadFunction() {
     socket.setBlocking(false);
     while (listening) {
         sf::Packet packet;
-        socket.receive(packet);
+        if (socket.receive(packet) != ssf::Socket::Done) {
+            continue;
+        }
         MessageId messageId = GetId(packet);
 
-        switch (messageId) {
-            case AuthenticateResp::id: {
-                auto msg = Creator<AuthenticateResp::id>::Create(packet);
-                printf("Result: %u\n", msg.result);
-                StateManager * sm = SharedContext::getStateManager();
-                if (sm->getCurrentStateType() == StateType::Main)
-                {
-                    StateMain *sMain = (StateMain*)(sm->getCurrentState());
-                    sMain->cancelAuthenticateInProgress(MessageResult::Ok);
-                }
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
+        Messenger::handleMessage(this, messageId, packet);
     }
 }
 
@@ -42,7 +29,6 @@ void Client::connect() {
     if (result == ssf::Socket::Status::Done) {
         listenThread.launch();
     }
-
 }
 
 void Client::disconnect() {
@@ -58,8 +44,34 @@ void Client::sendAuthenticate(const std::string &username, const std::string &pa
     msg.password = password;
     socket.send(msg);
 }
-
 void Client::sendLogout() {
     Msg::Logout msg;
+    socket.send(msg);
+}
+void Client::sendCreateLobby(const std::string &name) {
+    Msg::CreateLobby msg;
+    msg.name = name;
+    socket.send(msg);
+}
+void Client::sendGetLobbyList() {
+    Msg::GetLobbyList msg;
+    socket.send(msg);
+}
+void Client::sendJoinLobby(const std::string &name) {
+    Msg::JoinLobby msg;
+    msg.name = name;
+    socket.send(msg);
+}
+void Client::sendLeaveLobby() {
+    Msg::LeaveLobby msg;
+    socket.send(msg);
+}
+void Client::sendCloseLobbySlot(sf::Uint8 slot) {
+    Msg::CloseLobbySlot msg;
+    msg.slot = slot;
+    socket.send(msg);
+}
+void Client::sendStartLobbyGame() {
+    Msg::StartLobbyGame msg;
     socket.send(msg);
 }

@@ -59,7 +59,7 @@ void SysLog::processEntries() {
 
     {
 #ifdef _CLIENT_
-        const char * dir = "Client";
+        const char *dir = "Client";
 #else
         const char *dir = "Server";
 #endif

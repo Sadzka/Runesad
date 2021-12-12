@@ -10,7 +10,7 @@ namespace Msg {
     struct StartLobbyGame {
         static const MsgType id = MessageType::StartLobbyGame;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::StartLobbyGame &msg);
 

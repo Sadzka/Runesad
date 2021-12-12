@@ -15,6 +15,12 @@ public:
 
     void sendAuthenticate(const std::string &username, const std::string &password);
     void sendLogout();
+    void sendGetLobbyList();
+    void sendCreateLobby(const std::string &name);
+    void sendJoinLobby(const std::string &name);
+    void sendLeaveLobby();
+    void sendCloseLobbySlot(sf::Uint8 slot);
+    void sendStartLobbyGame();
 private:
     void listenThreadFunction();
     sf::Thread listenThread;

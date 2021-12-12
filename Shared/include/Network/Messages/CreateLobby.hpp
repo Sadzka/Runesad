@@ -17,7 +17,7 @@ namespace Msg {
         static const MsgType id = MessageType::CreateLobbyResp;
         MessageResult result;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::CreateLobby &msg);
 

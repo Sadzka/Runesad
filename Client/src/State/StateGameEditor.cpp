@@ -1,6 +1,5 @@
-/*
 #include "State/StateGameEditor.hpp"
-#include "SharedContext.hpp"
+#include "Base/SharedContext.hpp"
 
 StateGameEditor::StateGameEditor() : State("GameEditor"), eTime(0), worldEditor(this) {
     resetView();
@@ -183,4 +182,3 @@ void StateGameEditor::resetView() {
     view = SharedContext::getWindow()->getRenderWindow()->getDefaultView();
     view.move(0, -20); // Menu offset
 }
-*/

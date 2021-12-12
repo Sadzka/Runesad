@@ -24,6 +24,24 @@ namespace Msg {
         };
 
         template <unsigned DUMMY>
+        struct Loop<MsgType::MoveInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::MoveInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
+        struct Loop<MsgType::GameEnd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::GameEnd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
         struct Loop<MsgType::Hearthbeat, DUMMY> {
             static auto execute(sf::Packet & packet) {
                 Msg::Hearthbeat msg{};
@@ -53,7 +71,7 @@ namespace Msg {
         template <unsigned DUMMY>
         struct Loop<MsgType::Logout, DUMMY> {
             static auto execute(sf::Packet & packet) {
-                Msg::Hearthbeat msg{};
+                Msg::Logout msg{};
                 packet >> msg;
                 return msg;
             }
@@ -85,7 +103,7 @@ namespace Msg {
         template <unsigned DUMMY>
         struct Loop<MsgType::GetLobbyList, DUMMY> {
             static auto execute(sf::Packet & packet) {
-                Msg::DisbandLobby msg{};
+                Msg::GetLobbyList msg{};
                 packet >> msg;
                 return msg;
             }
@@ -102,6 +120,14 @@ namespace Msg {
         struct Loop<MsgType::JoinLobby, DUMMY> {
             static auto execute(sf::Packet & packet) {
                 Msg::JoinLobby msg{};
+                packet >> msg;
+                return msg;
+            }
+        };
+        template <unsigned DUMMY>
+        struct Loop<MsgType::JoinLobbyResp, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::JoinLobbyResp msg{};
                 packet >> msg;
                 return msg;
             }
@@ -125,7 +151,7 @@ namespace Msg {
         template <unsigned DUMMY>
         struct Loop<MsgType::StartLobbyGame, DUMMY> {
             static auto execute(sf::Packet & packet) {
-                Msg::LeaveLobbyResp msg{};
+                Msg::StartLobbyGame msg{};
                 packet >> msg;
                 return msg;
             }
@@ -133,7 +159,7 @@ namespace Msg {
         template <unsigned DUMMY>
         struct Loop<MsgType::UpdateLobbyStatus, DUMMY> {
             static auto execute(sf::Packet & packet) {
-                Msg::LeaveLobbyResp msg{};
+                Msg::UpdateLobbyStatus msg{};
                 packet >> msg;
                 return msg;
             }

@@ -13,10 +13,10 @@ namespace Msg {
         std::string name;
     };
     struct JoinLobbyResp {
-        static const MsgType id = MessageType::JoinLobby;
+        static const MsgType id = MessageType::JoinLobbyResp;
         MessageResult result;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::JoinLobby &msg);
 

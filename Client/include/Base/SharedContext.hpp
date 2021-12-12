@@ -1,7 +1,3 @@
-//
-// Created by Sadza on 13.06.2021.
-//
-
 #pragma once
 
 #ifndef SADZA_SHAREDCONTEXT_HPP
@@ -17,6 +13,7 @@
 #include "Base/Window.hpp"
 #include "State/base/StateManager.hpp"
 #include "Network/Client.hpp"
+#include "World/World.hpp"
 
 class SharedContext {
 public:
@@ -41,6 +38,8 @@ public:
 
     static Client *getClient() { return client; }
 
+    static World *getWorld() { return world; }
+
 private:
     static Variables *variables;
     static TextureManager *textureManager;
@@ -49,6 +48,7 @@ private:
     static Window *window;
     static StateManager *stateManager;
     static Client *client;
+    static World *world;
 };
 
 #endif //SADZA_SHAREDCONTEXT_HPP

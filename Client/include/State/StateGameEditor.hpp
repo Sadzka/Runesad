@@ -1,12 +1,9 @@
-//
-// Created by Sadza on 14.06.2021.
-//
-/*
 #ifndef SADZA_STATEGAMEEDITOR_HPP
 #define SADZA_STATEGAMEEDITOR_HPP
 
-#include "State.hpp"
+#include "base/State.hpp"
 #include <functional>
+#include <WorldEditor/WorldEditor.hpp>
 
 class StateGameEditor : public State {
     friend class WorldEditor;
@@ -43,7 +40,7 @@ public:
 private:
     float eTime;
     std::string currentPath;
+    WorldEditor worldEditor;
 };
 
 #endif //SADZA_STATEGAMEEDITOR_HPP
-*/

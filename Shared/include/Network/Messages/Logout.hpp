@@ -10,7 +10,7 @@ namespace Msg {
     struct Logout {
         static const MsgType id = MessageType::Logout;
     };
-};
+}
 
 sf::Packet &operator<<(sf::Packet &packet, const Msg::Logout &msg);
 

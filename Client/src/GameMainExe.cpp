@@ -1,8 +1,10 @@
 #include <iostream>
 #include "Base/Game.hpp"
+#include <Sys/SysLog.hpp>
 
 int main() {
 
+    SysLog logger;
     try {
         Game game;
 
