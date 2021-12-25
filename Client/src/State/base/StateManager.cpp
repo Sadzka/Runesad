@@ -33,6 +33,18 @@ void StateManager::lateDraw() {
 }
 
 void StateManager::update(const float &dTime) {
+    if (switchQueue != StateType::Unknown) {
+        StateType type = switchQueue;
+        switchQueue = StateType::Unknown;
+        auto newState = states.find(type);
+        if (currentState) { currentState->deactivate(); }
+
+        if (newState == states.end()) { currentState = createState(type); }
+        else { currentState = newState->second; }
+
+        currentStateType = type;
+        currentState->activate();
+    }
     currentState->update(dTime);
 //    for (auto & state : states) {
 //        state.second->update(dTime);
@@ -40,14 +52,7 @@ void StateManager::update(const float &dTime) {
 }
 
 void StateManager::switchTo(const StateType &type) {
-    auto newState = states.find(type);
-    if (currentState) { currentState->deactivate(); }
-
-    if (newState == states.end()) { currentState = createState(type); }
-    else { currentState = newState->second; }
-
-    currentStateType = type;
-    currentState->activate();
+    switchQueue = type;
 }
 
 void StateManager::switchToAndRemoveCurrent(const StateType &type) {

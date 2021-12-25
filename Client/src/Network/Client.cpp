@@ -55,8 +55,8 @@ void Client::sendCreateLobby(const std::string &name) {
 
     std::string filename = SharedContext::getGui()->get<tgui::Label>("mapNameLabel")->getText().toStdString();
     std::fstream file;
-    file.open("Data/maps/" + filename, std::ios::in);
-    if (file.good()) throw std::runtime_error("Error in createing file");
+    file.open("data/maps/" + filename, std::ios::in);
+    if (!file.good()) throw std::runtime_error("Error in opening file");
     std::string line;
     while(getline(file, line))
     {
@@ -65,6 +65,7 @@ void Client::sendCreateLobby(const std::string &name) {
     file.close();
 
     msg.mapName = filename;
+    Messenger::mapFile = filename;
 
     socket.send(msg);
 }

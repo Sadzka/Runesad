@@ -41,10 +41,11 @@ void Game::update() {
     deltaTime = clock.restart();
     float dTime = deltaTime.asSeconds();
 
-    SharedContext::getStateManager()->update(dTime);
     SharedContext::getWindow()->update();
     SharedContext::getAudioManager()->update();
     SharedContext::getGui()->updateTime();
+    SharedContext::getEntityManager()->update(dTime);
+    SharedContext::getStateManager()->update(dTime);
     lateUpdate();
 }
 
@@ -52,9 +53,10 @@ void Game::render() {
     SharedContext::getWindow()->beginDraw();
 
     SharedContext::getStateManager()->draw();
-    SharedContext::getGui()->draw();
-    //SharedContext::getEntityManager()->draw();
+    SharedContext::getEntityManager()->draw();
     SharedContext::getStateManager()->lateDraw();
+
+    SharedContext::getGui()->draw();
 
     SharedContext::getWindow()->endDraw();
 }

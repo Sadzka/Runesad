@@ -3,6 +3,7 @@
 #include "Network/Messenger.hpp"
 
 using namespace Msg;
+std::string Messenger::mapFile;
 
 void Messenger::handleMessage(Client *client, MessageId id, sf::Packet &packet)
 {
@@ -55,8 +56,11 @@ void Messenger::handleMessage(Client *client, MessageId id, sf::Packet &packet)
                 btn->setVisible(true);
             }
 
+            std::cout << msg.mapFile;
+            mapFile = msg.mapFile;
+
             std::fstream file;
-            file.open("Data/maps/" + msg.mapName + ".map");
+            file.open("Data/maps/" + msg.mapFile + ".map", std::ios::out);
             if (!file.good()) throw std::runtime_error("Failed open file!");
             file << msg.mapFile;
             file.close();
@@ -96,6 +100,44 @@ void Messenger::handleMessage(Client *client, MessageId id, sf::Packet &packet)
             gui->get<tgui::EditBox>("gameNameEditBox")->setText("");
             gui->get<tgui::EditBox>("gameNameEditBox")->setEnabled(true);
             gui->get<tgui::Button>("applyButton")->setEnabled(true);
+        }
+        case StartLobbyGame::id:
+        {
+            StartLobbyGame msg;
+            SysLog::Print(SysLog::Severity::Info, "Received StartLobbyGame");
+
+            printf("mapfile [%s] \n", mapFile.c_str());
+            SharedContext::getWorld()->loadWorld(mapFile);
+            SharedContext::getStateManager()->switchTo(StateType::Game);
+            StateGame *state = static_cast<StateGame*>(SharedContext::getStateManager()->getCurrentState());
+            state->setPlayerId(msg.playerId);
+            break;
+        }
+        case UpdateUnitInd::id:
+        {
+            UpdateUnitInd ind;
+            packet >> ind;
+            SysLog::Print(SysLog::Severity::Info, "Received UpdateUnitInd: unitId %u", ind.unitId);
+
+            EntityManger * em = SharedContext::getEntityManager();
+            if (ind.destroy)
+            {
+                em->removeEntity(ind.id);
+                break;
+            }
+            auto optEnt = em->getEntity(ind.unitId);
+            if (!optEnt.has_value()) {
+                ClientEntity entity;
+                entity.init(ind.unitId, ind.direction, ind.position, static_cast<EntityType>(ind.type));
+                em->addEntity(entity);
+            }
+            else {
+                ClientEntity *ent = optEnt.value();
+                ent->position = ind.position;
+                ent->direction = ind.direction;
+            }
+
+            break;
         }
         default:
         {

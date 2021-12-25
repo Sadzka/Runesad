@@ -14,6 +14,8 @@ class StateGame : public State
 private:
     float eTime;    //elapsedTime
     float dTime;    //deltaTime
+    sf::Uint32 playerId;
+    bool moving = false;
 public:
     StateGame();
     ~StateGame();
@@ -25,6 +27,9 @@ public:
 
     virtual void draw();
     virtual void lateDraw();
+
+    void setPlayerId(sf::Uint32 index) { playerId = index; }
+    sf::Uint32 getPlayerId() { return playerId; }
 };
 
 

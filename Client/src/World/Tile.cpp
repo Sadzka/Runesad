@@ -36,3 +36,7 @@ int Tile::getId() const {
 void Tile::setTransparent(const bool & transparent) {
     this->sprite.setColor(sf::Color(255, 255, 255, transparent ? 255 : 127));
 }
+
+void Tile::setType(int type) {
+    tileType = type;
+}

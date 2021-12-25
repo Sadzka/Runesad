@@ -8,7 +8,6 @@
 enum class StateType {
     Unknown = -1,
     Main = 0,
-    CharacterScreen,
     Game,
     GameEditor
 };

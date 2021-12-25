@@ -48,6 +48,9 @@ private:
 
     StateType currentStateType;
     State *currentState;
+
+    StateType switchQueue = StateType::Unknown;
+    sf::Mutex mutex;
 };
 
 #endif //SADZA_STATEMANAGER_HPP

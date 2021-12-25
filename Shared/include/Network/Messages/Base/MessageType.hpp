@@ -21,6 +21,7 @@ namespace MessageType {
         StartLobbyGame      = 0x00000F,
         GameEnd             = 0x000010,
         MoveInd             = 0x000011,
+        UpdateUnitInd,
         OutOfRange [[maybe_unused]]
     };
 }

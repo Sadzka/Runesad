@@ -27,8 +27,11 @@ const sf::Vector2i &World::getSize() const {
 void World::loadWorld(const std::string &worldname) {
 
     closeWorld();
+    std::string filename = worldname.find(".map") == std::string::npos
+            ? worldname
+            : worldname.substr(0, worldname.length()-4);
 
-    std::ifstream file("data/maps/" + worldname + ".map");
+    std::ifstream file("data/maps/" + filename + ".map");
     if (!file.is_open()) {
         std::cerr << "Error: " << strerror(errno) << std::endl;
         throw std::runtime_error("Could not open map file " + worldname + "\n");
@@ -59,6 +62,18 @@ void World::loadWorld(const std::string &worldname) {
         }
     }
 
+    for (auto & i : tanksPosition) {
+        file >> i.x >> i.y;
+    }
+
+    for (auto &tileset : tilesets) {
+        for (auto &tile : tileset.getTiles()) {
+            int tileType;
+            file >> tileType;
+            tile.setType(tileType);
+        }
+    }
+
     file.close();
 }
 
@@ -66,7 +81,7 @@ void World::saveWorld(const std::string &path) {
     std::cout << "path " << path << std::endl;
 
     std::fstream file;
-    file.open("data/maps/" + (path == "" ? name : path), std::ios::out);
+    file.open("data/maps/" + (path == "" ? name : path) + ".map", std::ios::out);
     std::cout << "out " << "data/maps/" + (path == "" ? name : path) << std::endl;
 
 
@@ -93,6 +108,17 @@ void World::saveWorld(const std::string &path) {
             file << "\n";
         }
         file << "\n";
+    }
+
+    for (auto & i : tanksPosition) {
+        file << i.x << ' ' << i.y << '\n';
+    }
+
+    for (auto &tileset : tilesets) {
+        for (const auto& tile : tileset.getTiles()) {
+            int tileType = tile.getType();
+            file << tileType << " ";
+        }
     }
 
     file.close();

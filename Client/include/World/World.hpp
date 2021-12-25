@@ -11,6 +11,7 @@
 
 #define BLUE_FLAG_INDEX 0
 #define RED_FLAG_INDEX 1
+#define MAX_PLAYERS 8
 
 class World {
     friend class WorldEditor;
@@ -57,7 +58,9 @@ public:
 
 private:
     void allocateMemory();
+
     sf::Vector2u flagPosition[2];
+    sf::Vector2u tanksPosition[MAX_PLAYERS];
 
     std::vector<Tileset> tilesets;
     sf::Vector2i size;

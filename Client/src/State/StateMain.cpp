@@ -280,6 +280,7 @@ void StateMain::activate() {
 
 void StateMain::deactivate() {
     SharedContext::getGui()->removeAllWidgets();
+    tgui::Gui *gui = SharedContext::getGui();
 }
 
 void StateMain::update(const float &dTime) {

@@ -9,6 +9,8 @@ class Client;
 class Messenger {
 public:
     static void handleMessage(Client *client, MessageId id, sf::Packet &packet);
+
+    static std::string mapFile;
 };
 
 

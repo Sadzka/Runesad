@@ -27,7 +27,10 @@ public:
 
     int getOffset()const;
 
+    std::vector<Tile> &getTiles() { return tiles; };
+
 private:
+
     int offset;
     int tilesNumber;
     std::vector<Tile> tiles;

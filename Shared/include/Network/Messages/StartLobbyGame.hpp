@@ -9,6 +9,7 @@
 namespace Msg {
     struct StartLobbyGame {
         static const MsgType id = MessageType::StartLobbyGame;
+        sf::Uint32 playerId;
     };
 }
 

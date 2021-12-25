@@ -32,6 +32,8 @@ private:
 
     void listenThreadFunction();
 
+    void processGames();
+
     std::unordered_map <sf::Uint64, std::shared_ptr<Client>> clients;
     std::vector <sf::Uint64> timeoutList;
     sf::Thread listenThread;

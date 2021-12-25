@@ -14,6 +14,7 @@
 #include "State/base/StateManager.hpp"
 #include "Network/Client.hpp"
 #include "World/World.hpp"
+#include "Entity/EntityManger.hpp"
 
 class SharedContext {
 public:
@@ -40,6 +41,8 @@ public:
 
     static World *getWorld() { return world; }
 
+    static EntityManger *getEntityManager() { return entityManager; }
+
 private:
     static Variables *variables;
     static TextureManager *textureManager;
@@ -49,6 +52,7 @@ private:
     static StateManager *stateManager;
     static Client *client;
     static World *world;
+    static EntityManger *entityManager;
 };
 
 #endif //SADZA_SHAREDCONTEXT_HPP

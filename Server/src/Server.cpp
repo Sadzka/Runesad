@@ -140,7 +140,16 @@ void Server::listenThreadFunction()
             timeoutList.clear();
             timeoutClock.restart();
         }
+
+        processGames();
         mutex.unlock();
+
+    }
+}
+
+void Server::processGames() {
+    for (auto &game : games.getGames())
+    {
 
     }
 }

@@ -16,5 +16,6 @@
 #include "Network/Messages/StartLobbyGame.hpp"
 #include "Network/Messages/GameEnd.hpp"
 #include "Network/Messages/MoveInd.hpp"
+#include "Network/Messages/UpdateUnitInd.hpp"
 
 #endif //SADZA_ALLMESSAGES_HPP

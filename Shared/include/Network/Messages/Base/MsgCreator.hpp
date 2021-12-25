@@ -24,6 +24,15 @@ namespace Msg {
         };
 
         template <unsigned DUMMY>
+        struct Loop<MsgType::UpdateUnitInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::UpdateUnitInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
         struct Loop<MsgType::MoveInd, DUMMY> {
             static auto execute(sf::Packet & packet) {
                 Msg::MoveInd msg;
