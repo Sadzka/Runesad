@@ -24,6 +24,42 @@ namespace Msg {
         };
 
         template <unsigned DUMMY>
+        struct Loop<MsgType::EndGameInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::EndGameInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
+        struct Loop<MsgType::DestroyTileInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::DestroyTileInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
+        struct Loop<MsgType::DestroyInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::DestroyInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
+        struct Loop<MsgType::ShotInd, DUMMY> {
+            static auto execute(sf::Packet & packet) {
+                Msg::ShotInd msg;
+                packet >> msg;
+                return msg;
+            }
+        };
+
+        template <unsigned DUMMY>
         struct Loop<MsgType::UpdateUnitInd, DUMMY> {
             static auto execute(sf::Packet & packet) {
                 Msg::UpdateUnitInd msg;

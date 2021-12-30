@@ -367,3 +367,10 @@ void StateMain::showFileDialog() {
         }
     });
 }
+
+void StateMain::skipLogin() {
+    screenAnimation.startAnimation(ScreenAnimation::Direction::Left, sf::seconds(0.1f));
+    // clear
+    SharedContext::getEntityManager()->clearAll();
+    SharedContext::getWorld()->closeWorld();
+}

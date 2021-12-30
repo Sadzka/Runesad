@@ -53,7 +53,7 @@ Lobby *Games::joinLobby(const std::shared_ptr<Client>& client, std::string &name
 void Games::startGame(Lobby *lobby) {
     for (int i = 0; i < MAX_PLAYERS; ++i) {
         if (lobbies[i].name == lobby->name) {
-            Game game(lobby);
+            Game *game = new Game(lobby);
             games.emplace_back(game);
             lobbies.erase(lobbies.begin() + i);
             return;

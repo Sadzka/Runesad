@@ -44,11 +44,16 @@ void StateManager::update(const float &dTime) {
 
         currentStateType = type;
         currentState->activate();
+
+        if (logged) {
+            if (currentStateType == StateType::Main)
+            {
+                StateMain *detailedCurrentState = (StateMain*)currentState;
+                detailedCurrentState->skipLogin();
+            }
+        }
     }
     currentState->update(dTime);
-//    for (auto & state : states) {
-//        state.second->update(dTime);
-//    }
 }
 
 void StateManager::switchTo(const StateType &type) {
@@ -83,4 +88,8 @@ void StateManager::removeState(const StateType &type) {
             return;
         }
     }
+}
+
+void StateManager::setLogged(bool b) {
+    logged = b;
 }

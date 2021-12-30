@@ -15,10 +15,10 @@ public:
     void removeLobby(std::string &name);
 
     void startGame(Lobby * lobby);
-    std::vector <Game> &getGames() { return games; }
+    std::vector <Game*> &getGames() { return games; }
 private:
     std::vector <Lobby> lobbies;
-    std::vector <Game> games;
+    std::vector <Game*> games;
 };
 
 

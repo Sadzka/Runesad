@@ -23,6 +23,7 @@ class ClientEntity {
     sf::Sprite sprite;
     sf::Uint8 animCrop = 0;
     float eTime = 0;
+    bool updatable = true;
 public:
     void init(sf::Uint32 id, Direction dir, sf::Vector2f pos, EntityType type);
     void update(const float &dTime);
@@ -30,6 +31,13 @@ public:
     void move(Direction dir);
     void stop();
     sf::Uint32 getId()const { return id; }
+    sf::Vector2f getPosition()const { return position; }
+    Direction getDirection() { return direction; }
+    EntityType getType()const { return type; }
+    sf::FloatRect getGlobalBounds() { return sprite.getGlobalBounds(); }
+    bool isUpdatable() const { return updatable; }
+    void markDestroyed() { updatable = false; }
+    bool isMoving() const { return moving; }
 };
 
 

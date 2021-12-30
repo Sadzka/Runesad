@@ -53,8 +53,18 @@ public:
 
     void closeWorld();
 
+    Tile *getTileFromPosition(const sf::Vector2f &position);
+
+    bool isPossitionCollidable(const sf::Vector2f &position);
+
+    bool isPossitionDestroyable(const sf::Vector2f &position);
+
+    bool isPossitionDestroyingMissle(const sf::Vector2f &position);
+
     sf::Vector2f getBlueFlagPosition() { return sf::Vector2f(flagPosition[BLUE_FLAG_INDEX].x, flagPosition[BLUE_FLAG_INDEX].y); }
     sf::Vector2f getRedFlagPosition() { return sf::Vector2f(flagPosition[RED_FLAG_INDEX].x, flagPosition[RED_FLAG_INDEX].y); }
+
+    void destroyTile(sf::Vector2f position);
 
 private:
     void allocateMemory();

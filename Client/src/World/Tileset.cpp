@@ -15,7 +15,7 @@ Tileset::Tileset(const std::string &tilesetName, const int &index) : offset(inde
             Tile tile;
             tile.setId(no++);
             tile.setTexture(
-                    SharedContext::getTextureManager()->getResource("data/img/tilesets/" + tilesetName + ".png"),
+                    SharedContext::getTextureManager()->loadResource("data/img/tilesets/" + tilesetName + ".png"),
                     sf::IntRect(i * tilesize, j * tilesize, tilesize, tilesize));
             this->tiles.push_back(tile);
             this->tilesNumber++;

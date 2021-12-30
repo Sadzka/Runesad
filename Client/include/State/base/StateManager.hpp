@@ -33,6 +33,8 @@ public:
     StateType getCurrentStateType() { return currentStateType; }
     State *getCurrentState() { return currentState; }
 
+    void setLogged(bool b);
+
 private:
     State * createState(const StateType &type);
 
@@ -50,7 +52,7 @@ private:
     State *currentState;
 
     StateType switchQueue = StateType::Unknown;
-    sf::Mutex mutex;
+    bool logged = false;
 };
 
 #endif //SADZA_STATEMANAGER_HPP

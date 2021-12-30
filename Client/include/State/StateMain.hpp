@@ -9,6 +9,7 @@
 
 class StateMain : public State {
     friend class Messenger;
+    friend class StateGame;
 public:
     StateMain();
 
@@ -29,6 +30,8 @@ public:
     virtual void lateDraw();
 
     void cancelAuthenticateInProgress(MessageResult result = MessageResult::UnknownStatus);
+
+    void skipLogin();
 
 private:
     std::string mapName;

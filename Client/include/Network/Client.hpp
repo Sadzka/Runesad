@@ -3,6 +3,8 @@
 
 #include <SFML/System/Mutex.hpp>
 #include <SFML/System/Thread.hpp>
+#include <TGUI/Vector2.hpp>
+#include <Network/Messages/UpdateUnitInd.hpp>
 #include "Network/Socket/TslListener.hpp"
 
 class Client {
@@ -21,6 +23,12 @@ public:
     void sendLeaveLobby();
     void sendCloseLobbySlot(sf::Uint8 slot);
     void sendStartLobbyGame();
+    void sendShotInd();
+    void sendDestroy(unsigned int id);
+    void sendDestroyTile(sf::Vector2f position);
+
+    void sendMoveInd(bool b, Direction dir = Direction::None);
+
 private:
     void listenThreadFunction();
     sf::Thread listenThread;

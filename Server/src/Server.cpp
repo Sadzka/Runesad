@@ -2,6 +2,8 @@
 #include "Database/Database.hpp"
 #include "Messenger.hpp"
 
+// #define USE_TSL
+
 Server::Server() :
             authenticateThread(&Server::authenticateThreadFunction, this),
             listenThread(&Server::listenThreadFunction, this) {
@@ -70,7 +72,7 @@ void Server::listenThreadFunction()
 
             MessageId id = Msg::GetId(packet);
 
-            SysLog::Print(SysLog::Severity::Info, "Received msgId=%u", id);
+            SysLog::Print(SysLog::Severity::Info, "Received msgId=0x%x", id);
             if (id == MsgType::Authenticate) {
 
                 unsigned char md[SHA256_DIGEST_LENGTH];

@@ -83,11 +83,47 @@ void Client::sendLeaveLobby() {
     socket.send(msg);
 }
 void Client::sendCloseLobbySlot(sf::Uint8 slot) {
-    Msg::CloseLobbySlot msg;
+    Msg::CloseLobbySlot msg{};
     msg.slot = slot;
     socket.send(msg);
 }
 void Client::sendStartLobbyGame() {
-    Msg::StartLobbyGame msg;
+    Msg::StartLobbyGame msg{};
     socket.send(msg);
+}
+
+void Client::sendShotInd() {
+    Msg::ShotInd msg{};
+    StateGame *state = (StateGame*)(SharedContext::getStateManager()->getCurrentState());
+    auto optEntity = SharedContext::getEntityManager()->getEntity(state->getPlayerId());
+    if (optEntity.has_value())
+    {
+        msg.position = optEntity.value()->getPosition();
+        msg.direction = static_cast<sf::Uint8>(optEntity.value()->getDirection());
+    }
+    socket.send(msg);
+}
+
+void Client::sendDestroy(unsigned int id) {
+    Msg::DestroyInd ind{};
+    ind.entityId = id;
+    socket.send(ind);
+}
+
+void Client::sendDestroyTile(sf::Vector2f position) {
+    Msg::DestroyTileInd ind{};
+    ind.position.x = position.x/32;
+    ind.position.y = position.y/32;
+    socket.send(ind);
+}
+
+void Client::sendMoveInd(bool b, Direction dir) {
+
+    Msg::MoveInd ind{};
+    StateGame *state = (StateGame*)(SharedContext::getStateManager()->getCurrentState());
+
+    ind.unitId = state->getPlayerId();
+    ind.start = b;
+    ind.direction = static_cast<sf::Uint8>(dir);
+    socket.send(ind);
 }

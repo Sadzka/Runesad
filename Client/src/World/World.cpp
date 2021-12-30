@@ -324,3 +324,40 @@ void World::clearTilesets() {
     tilesetIndex = 1;
 }
 
+Tile *World::getTileFromPosition(const sf::Vector2f &position)
+{
+    sf::Vector2i inWorldPosition = sf::Vector2i(position.x/tilesize, position.y/tilesize);
+    for (Tileset &tileset : tilesets) {
+        sf::Uint16 tileId = world[1][inWorldPosition.x][inWorldPosition.y];
+        if (tileId == 0) return nullptr;
+
+        Tile *tile = tileset.inRange(world[1][inWorldPosition.x][inWorldPosition.y]);
+        if (tile) {
+            return tile;
+        }
+    }
+    return nullptr;
+}
+
+bool World::isPossitionCollidable(const sf::Vector2f &position) {
+    Tile *tile = getTileFromPosition(position);
+    if (tile == nullptr) return false;
+    return tile->isCollidable();
+}
+bool World::isPossitionDestroyable(const sf::Vector2f &position) {
+    Tile *tile = getTileFromPosition(position);
+    if (tile == nullptr) return false;
+    return tile->isDestroyable();
+}
+bool World::isPossitionDestroyingMissle(const sf::Vector2f &position) {
+    Tile *tile = getTileFromPosition(position);
+    if (tile == nullptr) return false;
+    return tile->isDestroyingMissle();
+}
+
+void World::destroyTile(sf::Vector2f position) {
+    if (position.x < size.x && position.y < size.y && position.x > 0 && position.y > 0) {
+        world[1][position.x][position.y] = 0;
+    }
+}
+

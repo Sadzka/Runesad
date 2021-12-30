@@ -17,5 +17,9 @@
 #include "Network/Messages/GameEnd.hpp"
 #include "Network/Messages/MoveInd.hpp"
 #include "Network/Messages/UpdateUnitInd.hpp"
+#include "Network/Messages/ShotInd.hpp"
+#include "Network/Messages/DestroyInd.hpp"
+#include "Network/Messages/DestroyTileInd.hpp"
+#include "Network/Messages/EndGameInd.hpp"
 
 #endif //SADZA_ALLMESSAGES_HPP

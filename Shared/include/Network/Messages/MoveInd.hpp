@@ -10,6 +10,7 @@
 namespace Msg {
     struct MoveInd {
         static const MsgType id = MessageType::MoveInd;
+        sf::Uint32 unitId;
         sf::Uint8 direction;
         bool start;
     };

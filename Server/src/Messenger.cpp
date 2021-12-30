@@ -95,6 +95,51 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, s
             }
             break;
         }
+        case MsgType::ShotInd:
+        {
+            ShotInd ind;
+            packet >> ind;
+            SysLog::Print(SysLog::Severity::Info, "Received ShotInd");
+            Game *game = client->game;
+            if (game) {
+                game->createShot(client, ind.position, ind.direction);
+            }
+            break;
+        }
+        case MsgType::MoveInd:
+        {
+            MoveInd ind;
+            packet >> ind;
+            SysLog::Print(SysLog::Severity::Info, "Received MoveInd");
+            Game *game = client->game;
+            if (game) {
+                game->handleMoveInd(ind);
+            }
+            break;
+
+        }
+        case MsgType::DestroyInd:
+        {
+            DestroyInd ind;
+            packet >> ind;
+            SysLog::Print(SysLog::Severity::Info, "Received DestroyInd entity: %d", ind.entityId);
+            Game *game = client->game;
+            if (game) {
+                game->handleDestroyInd(ind);
+            }
+            break;
+        }
+        case MsgType::DestroyTileInd:
+        {
+            DestroyTileInd ind;
+            packet >> ind;
+            SysLog::Print(SysLog::Severity::Info, "Received DestroyTileInd:[%d, %d]", ind.position.x, ind.position.y);
+            Game *game = client->game;
+            if (game) {
+                game->handleDestroyTileInd(ind);
+            }
+            break;
+        }
 
         default:
         {

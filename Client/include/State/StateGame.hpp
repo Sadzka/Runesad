@@ -14,8 +14,10 @@ class StateGame : public State
 private:
     float eTime;    //elapsedTime
     float dTime;    //deltaTime
+    float shotCd;
     sf::Uint32 playerId;
     bool moving = false;
+    tgui::Button::Ptr endButton = nullptr;
 public:
     StateGame();
     ~StateGame();

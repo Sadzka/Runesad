@@ -14,7 +14,9 @@ enum class EntityType : sf::Uint8
 {
     BlueTank = 0,
     RedTank = 1,
-    Missile = 2
+    Missile = 2,
+    FlagBlue = 3,
+    FlagRed = 4
 };
 
 class Entity {
