@@ -35,8 +35,6 @@ private:
     bool listening = true;
 
     ssf::TslSocket socket;
-    ssf::TslListener listener;
-    sf::Mutex mutex;
 };
 
 #endif //RUNESAD_CLIENT_HPP

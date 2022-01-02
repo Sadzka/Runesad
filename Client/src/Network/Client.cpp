@@ -34,6 +34,7 @@ void Client::connect() {
 
 void Client::disconnect() {
     listenThread.terminate();
+    sendLogout();
     socket.disconnect();
 }
 
