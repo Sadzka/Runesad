@@ -52,6 +52,7 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, s
             client->send(resp);
             break;
         }
+        case MsgType::DisbandLobby:
         case MsgType::LeaveLobby:
         {
             Lobby *lobby = client->lobby;
@@ -68,8 +69,7 @@ void Messenger::handleMessage(Server *server, std::shared_ptr<Client> &client, s
             LeaveLobbyResp resp;
             client->send(resp);
             break;
-        }
-        case MsgType::DisbandLobby: { break; } // included in leave lobby
+    }
         case MsgType::CloseLobbySlot:
         {
             Lobby *lobby = client->lobby;

@@ -16,6 +16,30 @@ void StateMain::onDestroy() {
 }
 
 void StateMain::activate() {
+    tgui::Theme::setDefault("Data/UI/black.txt");
+
+    auto backgroundImage1 = tgui::Picture::create("Data/UI/background1.png");
+    backgroundImage1->setSize({"100%", "100%"});
+    backgroundImage1->moveToBack();
+    SharedContext::getGui()->add(backgroundImage1, "backgroundImage1");
+
+    auto backgroundImage2 = tgui::Picture::create("Data/UI/background2.png");
+    backgroundImage2->setSize({"100%", "100%"});
+    backgroundImage2->setPosition({"0%", "100%"});
+    backgroundImage2->moveToBack();
+    SharedContext::getGui()->add(backgroundImage2, "backgroundImage2");
+
+    auto backgroundImage3 = tgui::Picture::create("Data/UI/background3.png");
+    backgroundImage3->setSize({"100%", "100%"});
+    backgroundImage3->setPosition({"100%", "100%"});
+    backgroundImage3->moveToBack();
+    SharedContext::getGui()->add(backgroundImage3, "backgroundImage3");
+
+    auto buttonWE = tgui::Button::create("World Edit");
+    buttonWE->setSize({"200", "36"});
+    buttonWE->setPosition({"50% - 100", "70"});
+    SharedContext::getGui()->add(buttonWE);
+
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setSize({"200", "36"});
     editBoxUsername->setPosition({"50% - 100", "50% - 63"});
@@ -81,7 +105,7 @@ void StateMain::activate() {
 
     auto exitGameButton = tgui::Button::create("Exit Game");
     exitGameButton->setSize({"200", "36"});
-    exitGameButton->setPosition({"100% - 205", "100% - 41"});
+    exitGameButton->setPosition({"100% - 225", "100% - 55"});
     SharedContext::getGui()->add(exitGameButton);
 
     // Creating Game
@@ -267,11 +291,6 @@ void StateMain::activate() {
         loginLabel->setVisible(false);
         cancelAuthenticateInProgress();
     });
-
-    auto buttonWE = tgui::Button::create("World Edit");
-    buttonWE->setSize({"200", "36"});
-    buttonWE->setPosition({"50% - 100", "5"});
-    gui->add(buttonWE);
 
     buttonWE->onMousePress([=](){
         SharedContext::getStateManager()->switchTo(StateType::GameEditor);

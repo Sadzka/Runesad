@@ -209,6 +209,7 @@ void Messenger::handleMessage(Client *client, MessageId id, sf::Packet &packet)
         }
         default:
         {
+            SysLog::Print(SysLog::Severity::Error, "Unknown message reveived! id=0x%x", id);
             break;
         }
     }
