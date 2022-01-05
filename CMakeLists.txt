@@ -12,7 +12,7 @@ endif()
 include(Shared/CMakeLists.txt)
 include(Client/CMakeLists.txt)
 include(Server/CMakeLists.txt)
-#include(Test/CMakeLists.txt)
+include(SCT/CMakeLists.txt)
 
 set(SFML_DIR "D:/Program Files/mingw-w64/SFML/lib/cmake/SFML")
 find_package(SFML 2.5 REQUIRED COMPONENTS system window graphics audio network)

@@ -2,6 +2,7 @@
 #include <fstream>
 
 bool Database::userExist(const std::string& useraneme, const std::string& password) {
+    printf("Username: %s, Password %s \n", useraneme.c_str(), password.c_str());
     std::fstream file;
     std::string filename = "Database/" + useraneme;
     file.open(filename.c_str(), std::ios::in);

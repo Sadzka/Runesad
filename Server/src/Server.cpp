@@ -8,9 +8,6 @@ Server::Server() :
             authenticateThread(&Server::authenticateThreadFunction, this),
             listenThread(&Server::listenThreadFunction, this) {
 
-    if (!SHA256_Init(&context))
-        return;
-
     ConfigLoader cfgLoader("Config/Server.cfg", cfg);
 
     authenticateThread.launch();
@@ -77,6 +74,9 @@ void Server::listenThreadFunction()
 
                 unsigned char md[SHA256_DIGEST_LENGTH];
                 auto msg = Msg::Creator<MsgType::Authenticate>::Create(packet);
+
+                if (!SHA256_Init(&context))
+                    return;
 
                 if (!SHA256_Update(&context, msg.password.c_str(), msg.password.length()))
                     return;

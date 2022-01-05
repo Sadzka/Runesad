@@ -1,7 +1,6 @@
 #include <Sys/SysLog.hpp>
 #include "Console/Shutdown.hpp"
 
-
 void Shutdown::setActivators() {
     activators.emplace_back("shutdown");
     activators.emplace_back("exit");
